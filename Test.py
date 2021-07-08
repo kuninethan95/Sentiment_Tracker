@@ -20,27 +20,27 @@ def get_dataset(company, week):
     
     if company == "Apple":
         if week == "June 14th - June 19th":
-            df = pd.read_csv('good_apple.csv')
+            df = pd.read_csv('data/etl_df/df_etl_apple1.csv')
         if week == "June 21st - June 25th":
-            df = pd.read_csv('data/news_articles/hourly_apple_articles_621_625')
+            df = pd.read_csv('data/etl_df/df_etl_apple2.csv')
     
     if company == "Amazon":
         if week == "June 14th - June 19th":
-            df = pd.read_csv('data/news_articles/hourly_am_articles_614_618')
+            df = pd.read_csv('data/etl_df/df_etl_am1.csv')
         if week == "June 21st - June 25th":
-            df = pd.read_csv('data/news_articles/hourly_am_articles_621_625')
+            df = pd.read_csv('data/etl_df/df_etl_am2.csv')
     
     if company == "Microsoft":
         if week == "June 14th - June 19th":
-            df = pd.read_csv('data/news_articles/hourly_msft_articles_614_618')
+            df = pd.read_csv('data/etl_df/df_etl_msft1.csv')
         if week == "June 21st - June 25th":
-            df = pd.read_csv('data/news_articles/hourly_msft_articles_621_625')
+            df = pd.read_csv('data/etl_df/df_etl_msft1.csv')
     
     if company == "Netflix":
         if week == "June 14th - June 19th":
-            df = pd.read_csv('data/news_articles/hourly_nf_articles_614_618')
+            df = pd.read_csv('data/etl_df/df_etl_nflx1.csv')
         if week == "June 21st - June 25th":
-            df = pd.read_csv('data/news_articles/hourly_nf_articles_621_625')
+            df = pd.read_csv('data/etl_df/df_etl_nflx2.csv')
 
     return df
 
@@ -69,43 +69,49 @@ def resample(df):
 df_resamp = resample(df_idx)
 st.write(df_resamp)
 
-def sent_vol_fig(df, company):
+def sent_vol_fig(df_, company):
 
-  df['roll']=df['rules_sent'].rolling(window=5).mean().dropna()
+    df = resample(df_)
+    df['roll']=df['rules_sent'].rolling(window=5).mean().dropna()
 
-  fig = make_subplots(specs=[[{"secondary_y": True}]])
+    fig = make_subplots(specs=[[{"secondary_y": True}]])
 
-  # Add traces
-  fig.add_trace(
+    # Add traces
+    fig.add_trace(
       go.Scatter(mode="lines+markers",opacity=1.0,x=df.index, y=df['rules_sent'], name="Sentiment"),
       secondary_y=False,
-  )
+    )
 
-  fig.add_trace(
+    fig.add_trace(
       go.Scatter(mode="lines+markers",opacity=1.0,x=df.index, y=df['roll'], name="*Rolling* Sentiment"),
       secondary_y=False,
-  )
+    )
 
-  fig.add_trace(
+    fig.add_trace(
       go.Bar(opacity=0.8, x=df.index, y=df['results'], name="Volume"),
       secondary_y=True,
-  )
+    )
 
-  # Add figure title
-  fig.update_layout(
+    # Add figure title
+    fig.update_layout(
       title_text=f"{company} Sentiment Graph"
-  )
+    )
 
-  # Set x-axis title
-  fig.update_xaxes(title_text="Date - Time")
+    # Set x-axis title
+    fig.update_xaxes(title_text="Date - Time")
 
-  # Set y-axes titles
-  fig.update_yaxes(title_text="<b>Sentiment</b>", secondary_y=False)
-  fig.update_yaxes(title_text="<b>Volume</b>", secondary_y=True, range=[40,200])
-  fig.update_xaxes(rangebreaks=[dict(bounds=[16, 9], pattern="hour")])
-
-  fig.update_xaxes(rangeslider_visible=True)
-  return fig
+    # Set y-axes titles
+    
+    fig.update_yaxes(title_text="<b>Sentiment</b>", secondary_y=False)
+    if company!='Netflix':
+        fig.update_yaxes(title_text="<b>Volume</b>", secondary_y=True, range=[40,200])
+        fig.update_xaxes(rangebreaks=[dict(bounds=[16, 9], pattern="hour")])
+    else:
+        fig.update_yaxes(title_text="<b>Volume</b>", secondary_y=True, range=[20,150])
+        fig.update_xaxes(rangebreaks=[dict(bounds=[16, 9], pattern="hour")])
+    
+    fig.update_xaxes(rangeslider_visible=True)
+    return fig
 
 plotly_fig = sent_vol_fig(df_resamp, company)
 

@@ -1,9 +1,11 @@
 
+from pandas.io.parsers import read_csv
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import datetime
+st.beta_set_page_config(layout="wide")
 
 # Set title
 st.title("Sentiment Tracker")
@@ -151,16 +153,45 @@ day = date.day
 # Show dataframe for specific day
 def show_day(df, day):
     df = df[df['day']==day]
-    return df.iloc[:,[0,1,2,3,-1]].sort_index()
+    return df#.iloc[:,[0,1,2,3,-1]].sort_index()
+
+df_day = show_day(df, day)
+# st.write(df_day.iloc[:,[0,1,2,3,-1]].sort_index())
+
+# Reset index before coloring, remove cols
+def reset_index_version_remove_cols(df):
+    df = df.reset_index()
+    df.drop(columns=['description', 'content', 'results', 'hour', 'day', 'cont_joined', 'neg', 'neu',
+                    'pos', 'blob', 'comp_abs', 'blob_abs', 'c_b'], inplace=True)
+    df.rename(columns={'source2': 'source'}, inplace=True)
+    return df
+
+df_no_index = reset_index_version_remove_cols(df_day)
+# st.write(df_no_index)
 
 # Apply coloring to DF
-df_day = show_day(df, day)
 
-st.dataframe(df_day)
+num = df_no_index.shape[1]
+def highlight(s):
+
+    if s['comp'] > 0.90:
+        return ['background-color: green']*num
+    elif s['comp'] < -0.80:
+        return ['background-color: red']*num
+    else:
+        return ['background-color: white']*num
+
+df_colored_day = df_no_index.style.apply(highlight, axis=1)
+
+col1, col2 = st.beta_columns(2)
+col1.header("DataFrame")
+col1.dataframe(df_colored_day)
+# st.dataframe(df_colored_day(use_column_width=True))
+# st.dataframe(df_colored_day)
 
 def sentiment_hour(df, day):
     df_day = df[df['day']==day]
-    labels = ['Negative','Neutral','Positive']
+    labels = ['Positive','Neutral','Negative']
     values = list(df_day['Sentiment'].value_counts().values)
     colors = ['Green', 'yellow', 'Red']
     
@@ -169,7 +200,12 @@ def sentiment_hour(df, day):
                       marker=dict(colors=colors, line=dict(color='#000000', width=2)))
     return fig
 
+
 pie_chart = sentiment_hour(df, day)
-st.plotly_chart(pie_chart)
+
+col2.header("Sentiment")
+col2.plotly_chart(pie_chart)
+
+# st.plotly_chart(pie_chart)
 
 

@@ -5,7 +5,8 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import datetime
-st.beta_set_page_config(layout="wide")
+st.set_page_config(layout="wide")
+
 
 # Set title
 st.title("Sentiment Tracker")
@@ -185,7 +186,7 @@ df_colored_day = df_no_index.style.apply(highlight, axis=1)
 
 col1, col2 = st.beta_columns(2)
 col1.header("DataFrame")
-col1.dataframe(df_colored_day)
+col1.dataframe(df_colored_day, width=500)
 # st.dataframe(df_colored_day(use_column_width=True))
 # st.dataframe(df_colored_day)
 
@@ -203,7 +204,7 @@ def sentiment_hour(df, day):
 
 pie_chart = sentiment_hour(df, day)
 
-col2.header("Sentiment")
+col2.header("Sentiment Distribution")
 col2.plotly_chart(pie_chart)
 
 # st.plotly_chart(pie_chart)

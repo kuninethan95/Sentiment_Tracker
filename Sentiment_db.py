@@ -5,7 +5,7 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import datetime
-import SessionState 
+import SessionState
 
 st.set_page_config(layout="wide")
 

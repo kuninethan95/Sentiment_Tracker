@@ -186,9 +186,47 @@ def highlight(s):
 
 df_colored_day = df_no_index.style.apply(highlight, axis=1)
 
+def paginated_df(data):
+    N = 30
+
+    # A variable to keep track of which product we are currently displaying
+    session_state = SessionState.get(page_number = 0)
+    df_day.rename(columns={'source2':'Source', 'title':'Headline'},inplace=True)
+    data = data
+    last_page = len(data) // N
+
+    # Add a next button and a previous button
+
+    prev, _ ,next = st.beta_columns([1, 10, 1])
+
+    if next.button("Next"):
+
+        if session_state.page_number + 1 > last_page:
+            session_state.page_number = 0
+        else:
+            session_state.page_number += 1
+
+    if prev.button("Previous"):
+
+        if session_state.page_number - 1 < 0:
+            session_state.page_number = last_page
+        else:
+            session_state.page_number -= 1
+
+    # Get start and end indices of the next page of the dataframe
+    start_idx = session_state.page_number * N 
+    end_idx = (1 + session_state.page_number) * N
+
+    # Index into the sub dataframe
+    sub_df = data.iloc[start_idx:end_idx, [0,4,-1]]
+    return sub_df
+#st.write(sub_df)
+
+# st.write(paginated_df(df_day))
+
 col1, col2 = st.beta_columns(2)
 col1.header("DataFrame")
-col1.dataframe(df_colored_day, width=500)
+col1.dataframe(paginated_df(df_day), width=500)
 # st.dataframe(df_colored_day(use_column_width=True))
 # st.dataframe(df_colored_day)
 
@@ -210,44 +248,4 @@ col2.header("Sentiment Distribution")
 col2.plotly_chart(pie_chart)
 
 # st.plotly_chart(pie_chart)
-
-
-
-
-# Number of entries per screen
-N = 15
-
-st.markdown("# Demonstrating use of Next button with Session State")
-
-# Read the table and initialize page number to zero to view the first N entries in dataframe
-page_number = 0
-data = pd.read_csv("auto-mpg.csv")
-last_page = len(data) // N
-
-# Add a next button and a previous button
-
-prev, _ ,next = st.beta_columns([1, 10, 1])
-
-if next.button("Next"):
-
-    if page_number + 1 > last_page:
-        page_number = 0
-    else:
-        page_number += 1
-
-if prev.button("Previous"):
-
-    if page_number - 1 < 0:
-        page_number = last_page
-    else:
-        page_number -= 1
-
-# Get start and end indices of the next page of the dataframe
-start_idx = page_number * N 
-end_idx = (1 + page_number) * N
-
-# Index into the sub dataframe
-sub_df = data.iloc[start_idx:end_idx]
-st.write(sub_df)
-
 

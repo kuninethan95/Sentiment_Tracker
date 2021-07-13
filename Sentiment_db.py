@@ -125,6 +125,7 @@ def sent_vol_fig(df_, company):
         fig.update_xaxes(rangebreaks=[dict(bounds=[16, 9], pattern="hour")])
     
     fig.update_xaxes(rangeslider_visible=True)
+    fig.update_layout(width=1400,height=400)
     return fig
 
 plotly_fig = sent_vol_fig(df_resamp, company)
@@ -187,7 +188,7 @@ def highlight(s):
 df_colored_day = df_no_index.style.apply(highlight, axis=1)
 
 def paginated_df(data):
-    N = 30
+    N = 10
 
     # A variable to keep track of which product we are currently displaying
     session_state = SessionState.get(page_number = 0)
@@ -197,7 +198,7 @@ def paginated_df(data):
 
     # Add a next button and a previous button
 
-    prev, _ ,next = st.beta_columns([1, 10, 1])
+    prev, _ ,next = st.beta_columns([1, 6, 1])
 
     if next.button("Next"):
 
@@ -224,9 +225,9 @@ def paginated_df(data):
 
 # st.write(paginated_df(df_day))
 
-col1, col2 = st.beta_columns(2)
-col1.header("DataFrame")
-col1.dataframe(paginated_df(df_day), width=500)
+
+st.table(paginated_df(df_day))
+
 # st.dataframe(df_colored_day(use_column_width=True))
 # st.dataframe(df_colored_day)
 
@@ -244,8 +245,8 @@ def sentiment_hour(df, day):
 
 pie_chart = sentiment_hour(df, day)
 
-col2.header("Sentiment Distribution")
-col2.plotly_chart(pie_chart)
+# col2.header("Sentiment Distribution")
+# col2.plotly_chart(pie_chart)
 
-# st.plotly_chart(pie_chart)
+st.plotly_chart(pie_chart)
 

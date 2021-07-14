@@ -15,18 +15,19 @@ st.set_page_config(layout="wide")
 # Set title
 st.title("Sentiment Tracker")
 
+
 # Add description
 st.write("""
 ## Explore the sentiment of different companies
 Choose between Apple, Facebook, Microsoft, Netlfix, and Google""")
 
 # Select company to analyze
-company = st.selectbox(
+company = st.sidebar.selectbox(
     'Select Company',
-    ('Apple', 'Facebook',  'Microsoft', 'Google', 'Netflix'))
+    ('Apple', 'Facebook',  'Amazon', 'Microsoft', 'Google', 'Netflix'))
 
-# Choose a week to get data from
-week = st.selectbox('Select Week', ('June 14th - June 19th', 'June 21st - June 25th'))
+# Choose a week to get data from 
+week = st.sidebar.selectbox('Select Week', ('June 14th - June 19th', 'June 21st - June 25th'))
 
 # Get dataset for corresponding company and week
 def get_dataset(company, week):
@@ -54,6 +55,18 @@ def get_dataset(company, week):
             df = pd.read_csv('data/etl_df/df_etl_nflx1.csv')
         if week == "June 21st - June 25th":
             df = pd.read_csv('data/etl_df/df_etl_nflx2.csv')
+
+    if company == "Facebook":
+        if week == "June 14th - June 19th":
+            df = pd.read_csv('data/etl_df/df_etl_fb1.csv')
+        if week == "June 21st - June 25th":
+            df = pd.read_csv('data/etl_df/df_etl_fb2.csv')
+
+    if company == "Google":
+        if week == "June 14th - June 19th":
+            df = pd.read_csv('data/etl_df/df_etl_goog1.csv')
+        if week == "June 21st - June 25th":
+            df = pd.read_csv('data/etl_df/df_etl_goog2.csv')
 
     return df
 
@@ -134,7 +147,7 @@ plotly_fig = sent_vol_fig(df_resamp, company)
 
 st.plotly_chart(plotly_fig)
 
-st.write('Please choose a weekday to further inspect')
+st.write('Please choose a weekday to further inspectded')
 
 if week == 'June 14th - June 19th':
     date = st.date_input('Date input', value=datetime.datetime(2021, 6,14), max_value=datetime.datetime(2021, 6, 18), min_value=datetime.datetime(2021, 6, 14))
@@ -255,38 +268,40 @@ st.write(company)
 st.write(week)
 
 def find_file(company):
+
     if company == "Apple":
         if week == "June 14th - June 19th":
-            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+            file = joblib.load('grid_estimator_models/apple1_bp.pkl')
     if week == "June 21st - June 25th":
-            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+            file = joblib.load('grid_estimator_models/apple2_bp.pkl')
 
     if company == "Amazon":
         if week == "June 14th - June 19th":
-            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+            file = joblib.load('grid_estimator_models/am1_bp.pkl')
         if week == "June 21st - June 25th":
-            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+            file = joblib.load('grid_estimator_models/am2_bp.pkl')
 
     if company == "Microsoft":
         if week == "June 14th - June 19th":
-            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+            file = joblib.load('grid_estimator_models/ms1_bp.pkl')
         if week == "June 21st - June 25th":
-            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+            file = joblib.load('grid_estimator_models/ms2_bp.pkl')
 
     if company == "Netflix":
         if week == "June 14th - June 19th":
-            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+            file = joblib.load('grid_estimator_models/nf1_bp.pkl')
         if week == "June 21st - June 25th":
-            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+            file = joblib.load('grid_estimator_models/nf2_bp.pkl')
 
     return file
 
+pkl_file = find_file(company)
 
 def feat_imp_fig(pkl_file, company, week):
     
 
     # Load in pickle file
-    comp_be = joblib.load(pkl_file)
+    comp_be = pkl_file
 
     # Create vector + clf
     vect = comp_be.named_steps['text_pipe']
@@ -322,5 +337,5 @@ def feat_imp_fig(pkl_file, company, week):
     fig.update_layout(layout1)
     return fig
 
-fig = feat_imp_fig('grid_estimator_models/apple1_bp.pkl', company, week)
+fig = feat_imp_fig(pkl_file, company.lower(), week)
 st.plotly_chart(fig)

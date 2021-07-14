@@ -19,7 +19,7 @@ st.title("Sentiment Tracker")
 # Add description
 st.write("""
 ## Explore the sentiment of different companies
-Choose between Apple, Facebook, Microsoft, Netlfix, and Google""")
+Choose between Apple, Facebook, Microsoft, Amazon, Netlfix, and Google""")
 
 # Select company to analyze
 company = st.sidebar.selectbox(
@@ -140,14 +140,99 @@ def sent_vol_fig(df_, company):
         fig.update_xaxes(rangebreaks=[dict(bounds=[16, 9], pattern="hour")])
     
     fig.update_xaxes(rangeslider_visible=True)
-    fig.update_layout(width=1200,height=400)
+    fig.update_layout(width=1100,height=400)
     return fig
 
 plotly_fig = sent_vol_fig(df_resamp, company)
 
 st.plotly_chart(plotly_fig)
 
-st.write('Please choose a weekday to further inspectded')
+def find_file(company):
+
+    if company == "Apple":
+        if week == "June 14th - June 19th":
+            file = joblib.load('grid_estimator_models/apple1_bp.pkl')
+    if week == "June 21st - June 25th":
+            file = joblib.load('grid_estimator_models/apple2_bp.pkl')
+
+    if company == "Amazon":
+        if week == "June 14th - June 19th":
+            file = joblib.load('grid_estimator_models/am1_bp.pkl')
+        if week == "June 21st - June 25th":
+            file = joblib.load('grid_estimator_models/am2_bp.pkl')
+
+    if company == "Microsoft":
+        if week == "June 14th - June 19th":
+            file = joblib.load('grid_estimator_models/ms1_bp.pkl')
+        if week == "June 21st - June 25th":
+            file = joblib.load('grid_estimator_models/ms2_bp.pkl')
+
+    if company == "Netflix":
+        if week == "June 14th - June 19th":
+            file = joblib.load('grid_estimator_models/nf1_bp.pkl')
+        if week == "June 21st - June 25th":
+            file = joblib.load('grid_estimator_models/nf2_bp.pkl')
+    
+    if company == "Facebook":
+        if week == "June 14th - June 19th":
+            file = joblib.load('grid_estimator_models/fb1_bp.pkl')
+        if week == "June 21st - June 25th":
+            file = joblib.load('grid_estimator_models/fb2_bp.pkl')
+
+    if company == "Google":
+        if week == "June 14th - June 19th":
+            file = joblib.load('grid_estimator_models/goog1_bp.pkl')
+        if week == "June 21st - June 25th":
+            file = joblib.load('grid_estimator_models/goog2_bp.pkl')
+
+    return file
+
+pkl_file = find_file(company)
+
+def feat_imp_fig(pkl_file, company, week):
+    
+
+    # Load in pickle file
+    comp_be = pkl_file
+
+    # Create vector + clf
+    vect = comp_be.named_steps['text_pipe']
+    clf = comp_be.named_steps['clf']
+
+    # Feature Importance Series
+    importance = pd.Series(clf.feature_importances_,
+                          index=vect.get_feature_names())
+
+    importance=importance.sort_values(ascending=False).to_frame()
+    importance = importance.nlargest(30, columns=0)
+    importance=importance.sort_values(by=0, ascending=True)
+
+    # Remove company name
+    importance.drop(company, inplace=True)
+
+    # Rename column
+    importance.rename(columns={0:'Sentiment Importance'}, inplace=True)
+
+    # Create Plotly fig
+    fig = px.bar(importance, y=importance.index, x='Sentiment Importance', orientation='h')
+    layout1 = go.Layout(
+    title={
+        'text': f"Week of {week}: Most Impactful Words for Driving Sentiment for {company.capitalize()}",
+        'y':0.95,
+        'x':0.5,
+        'xanchor': 'center',
+        },
+    yaxis=dict(
+               tickvals=importance.index,
+        title='Commmon Words',
+        ))
+    fig.update_layout(layout1)
+    return fig
+
+fig = feat_imp_fig(pkl_file, company.lower(), week)
+st.plotly_chart(fig)
+
+st.write('Please choose a weekday to further inspect')
 
 if week == 'June 14th - June 19th':
     date = st.date_input('Date input', value=datetime.datetime(2021, 6,14), max_value=datetime.datetime(2021, 6, 18), min_value=datetime.datetime(2021, 6, 14))
@@ -246,96 +331,29 @@ st.table(paginated_df(df_day))
 # st.dataframe(df_colored_day(use_column_width=True))
 # st.dataframe(df_colored_day)
 
-def sentiment_hour(df, day):
-    df_day = df[df['day']==day]
-    labels = ['Positive','Neutral','Negative']
-    values = list(df_day['Sentiment'].value_counts().values)
-    colors = ['Green', 'yellow', 'Red']
-    
-    fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
-    fig.update_traces(hoverinfo='label+percent', textinfo='value', textfont_size=20,
-                      marker=dict(colors=colors, line=dict(color='#000000', width=2)))
-    return fig
+col1, col2 = st.beta_columns([1,1])
+
+with col1:
+    st.header(f"How did people feel about {company} that day?")
+    def sentiment_hour(df, day):
+        df_day = df[df['day']==day]
+        labels = ['Positive','Neutral','Negative']
+        values = list(df_day['Sentiment'].value_counts().values)
+        colors = ['Green', 'yellow', 'Red']
+        
+        fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
+        fig.update_traces(hoverinfo='label+percent', textinfo='value', textfont_size=20,
+                        marker=dict(colors=colors, line=dict(color='#000000', width=2)))
+        fig.update_layout(width=500, height=500)
+        return fig
 
 
-pie_chart = sentiment_hour(df, day)
-
-# col2.header("Sentiment Distribution")
-# col2.plotly_chart(pie_chart)
-
-st.plotly_chart(pie_chart)
-st.write(company)
-st.write(week)
-
-def find_file(company):
-
-    if company == "Apple":
-        if week == "June 14th - June 19th":
-            file = joblib.load('grid_estimator_models/apple1_bp.pkl')
-    if week == "June 21st - June 25th":
-            file = joblib.load('grid_estimator_models/apple2_bp.pkl')
-
-    if company == "Amazon":
-        if week == "June 14th - June 19th":
-            file = joblib.load('grid_estimator_models/am1_bp.pkl')
-        if week == "June 21st - June 25th":
-            file = joblib.load('grid_estimator_models/am2_bp.pkl')
-
-    if company == "Microsoft":
-        if week == "June 14th - June 19th":
-            file = joblib.load('grid_estimator_models/ms1_bp.pkl')
-        if week == "June 21st - June 25th":
-            file = joblib.load('grid_estimator_models/ms2_bp.pkl')
-
-    if company == "Netflix":
-        if week == "June 14th - June 19th":
-            file = joblib.load('grid_estimator_models/nf1_bp.pkl')
-        if week == "June 21st - June 25th":
-            file = joblib.load('grid_estimator_models/nf2_bp.pkl')
-
-    return file
-
-pkl_file = find_file(company)
-
-def feat_imp_fig(pkl_file, company, week):
+    pie_chart = sentiment_hour(df, day)
+    st.plotly_chart(pie_chart)
     
 
-    # Load in pickle file
-    comp_be = pkl_file
 
-    # Create vector + clf
-    vect = comp_be.named_steps['text_pipe']
-    clf = comp_be.named_steps['clf']
-
-    # Feature Importance Series
-    importance = pd.Series(clf.feature_importances_,
-                          index=vect.get_feature_names())
-
-    importance=importance.sort_values(ascending=False).to_frame()
-    importance = importance.nlargest(30, columns=0)
-    importance=importance.sort_values(by=0, ascending=True)
-
-    # Remove company name
-    importance.drop(company, inplace=True)
-
-    # Rename column
-    importance.rename(columns={0:'Sentiment Importance'}, inplace=True)
-
-    # Create Plotly fig
-    fig = px.bar(importance, y=importance.index, x='Sentiment Importance', orientation='h')
-    layout1 = go.Layout(
-    title={
-        'text': f"Week of {week}: Most Impactful Words for Driving Sentiment for {company.capitalize()}",
-        'y':0.95,
-        'x':0.5,
-        'xanchor': 'center',
-        },
-    yaxis=dict(
-               tickvals=importance.index,
-        title='Commmon Words',
-        ))
-    fig.update_layout(layout1)
-    return fig
-
-fig = feat_imp_fig(pkl_file, company.lower(), week)
-st.plotly_chart(fig)
+with col2:
+    st.header("Here were the most polarizing articles")
+    st.dataframe(df_no_index)
+    

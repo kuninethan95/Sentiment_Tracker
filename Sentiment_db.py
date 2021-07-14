@@ -2,10 +2,12 @@
 from pandas.io.parsers import read_csv
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import datetime
 import SessionState
+import joblib
 
 st.set_page_config(layout="wide")
 
@@ -125,7 +127,7 @@ def sent_vol_fig(df_, company):
         fig.update_xaxes(rangebreaks=[dict(bounds=[16, 9], pattern="hour")])
     
     fig.update_xaxes(rangeslider_visible=True)
-    fig.update_layout(width=1400,height=400)
+    fig.update_layout(width=1200,height=400)
     return fig
 
 plotly_fig = sent_vol_fig(df_resamp, company)
@@ -249,4 +251,76 @@ pie_chart = sentiment_hour(df, day)
 # col2.plotly_chart(pie_chart)
 
 st.plotly_chart(pie_chart)
+st.write(company)
+st.write(week)
 
+def find_file(company):
+    if company == "Apple":
+        if week == "June 14th - June 19th":
+            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+    if week == "June 21st - June 25th":
+            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+
+    if company == "Amazon":
+        if week == "June 14th - June 19th":
+            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+        if week == "June 21st - June 25th":
+            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+
+    if company == "Microsoft":
+        if week == "June 14th - June 19th":
+            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+        if week == "June 21st - June 25th":
+            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+
+    if company == "Netflix":
+        if week == "June 14th - June 19th":
+            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+        if week == "June 21st - June 25th":
+            file = joblib.load('data/etl_df/df_etl_apple1.csv')
+
+    return file
+
+
+def feat_imp_fig(pkl_file, company, week):
+    
+
+    # Load in pickle file
+    comp_be = joblib.load(pkl_file)
+
+    # Create vector + clf
+    vect = comp_be.named_steps['text_pipe']
+    clf = comp_be.named_steps['clf']
+
+    # Feature Importance Series
+    importance = pd.Series(clf.feature_importances_,
+                          index=vect.get_feature_names())
+
+    importance=importance.sort_values(ascending=False).to_frame()
+    importance = importance.nlargest(30, columns=0)
+    importance=importance.sort_values(by=0, ascending=True)
+
+    # Remove company name
+    importance.drop(company, inplace=True)
+
+    # Rename column
+    importance.rename(columns={0:'Sentiment Importance'}, inplace=True)
+
+    # Create Plotly fig
+    fig = px.bar(importance, y=importance.index, x='Sentiment Importance', orientation='h')
+    layout1 = go.Layout(
+    title={
+        'text': f"Week of {week}: Most Impactful Words for Driving Sentiment for {company.capitalize()}",
+        'y':0.95,
+        'x':0.5,
+        'xanchor': 'center',
+        },
+    yaxis=dict(
+               tickvals=importance.index,
+        title='Commmon Words',
+        ))
+    fig.update_layout(layout1)
+    return fig
+
+fig = feat_imp_fig('grid_estimator_models/apple1_bp.pkl', company, week)
+st.plotly_chart(fig)

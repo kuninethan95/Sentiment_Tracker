@@ -334,7 +334,7 @@ st.table(paginated_df(df_day))
 col1, col2 = st.beta_columns([1,1])
 
 with col1:
-    st.header(f"How did people feel about {company} that day?")
+    st.header(f"How did people feel about {company} on {date:%B %d, %Y}?")
     def sentiment_hour(df, day):
         df_day = df[df['day']==day]
         labels = ['Positive','Neutral','Negative']
@@ -344,7 +344,7 @@ with col1:
         fig = go.Figure(data=[go.Pie(labels=labels, values=values)])
         fig.update_traces(hoverinfo='label+percent', textinfo='value', textfont_size=20,
                         marker=dict(colors=colors, line=dict(color='#000000', width=2)))
-        fig.update_layout(width=500, height=500)
+        fig.update_layout(width=400, height=400)
         return fig
 
 
@@ -352,8 +352,42 @@ with col1:
     st.plotly_chart(pie_chart)
     
 
+def prep_for_color(df):
+
+    # Drop duplicates
+    df.drop_duplicates(subset=['Headline', 'Source'], inplace=True)
+
+    # Drop unnecessary comments
+    df.drop(columns=['description', 'content', 'results', 'hour', 'day', 'cont_joined', 'neg',
+                    'neu', 'pos', 'blob', 'blob_abs', 'c_b', 'comp_abs'], inplace=True)
+
+    # Pull out most polarizing
+    df = df[(df['comp']>=df['comp'].quantile(0.90)) | (df['comp']<=df['comp'].quantile(0.10))].copy()
+
+    # Drop additional columns
+    df.drop(columns=['comp'], inplace=True)
+    
+    # Rename columns
+    df.rename(columns={'title':'Headline', 'source2':'Source'}, inplace=True)
+    
+    return df
+
+df_prep = prep_for_color(df_day)
+
+df_prep = df_prep.reset_index()
+
+num = df_prep.shape[1]
+def highlight_1(s):
+
+    if s['Sentiment'] > 0:
+        return ['background-color: mediumseagreen']*num
+    else:
+        return ['background-color: lightcoral']*num
+
+df_prepped = df_prep.style.apply(highlight_1, axis=1)
+
 
 with col2:
-    st.header("Here were the most polarizing articles")
-    st.dataframe(df_no_index)
+    st.header(f"Here were the most polarizing {company} articles from {date:%B %d, %Y}")
+    st.dataframe(df_prepped)
     

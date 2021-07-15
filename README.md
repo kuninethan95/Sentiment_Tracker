@@ -43,6 +43,19 @@ https://textblob.readthedocs.io/en/dev/advanced_usage.html#sentiment-analyzers
 ------
 # NLP Using TF-IDF and Random Forest
 
+Used sklearn TF-IDF vectorizer to pre-process text for classifcation models. Did not use CountVectorizer because TF-IDF is a more nuanced approach. Used a pipeline to alter the following:
+
+> 1. Stop words: List of words eliminated because they have litte to no meaning for classification (ie prepositions)
+> 2. Ngram Range: Number of n-grams to incorporate into TF-IDF Vectorizer (used unigrams and bigrams)
+> 3. Max_df: Ignores terms that are present accross maximum threshold of documents
+> 4. Min_df: Ignores terms that are present accross minimum threshold of documents
+> 5. Tokenizer: Utilized NLTK RegExp tokenizer to handle contractions
+> 6. Normalizer: Applied L1 or L2 normalization to reduce noise
+
+Tested Random Forest and Logistic Regression to classify sentiment as positive, negative, or neutral (1, -1, 0). Dummy model had 40% accuracy and Random Forest Models had a test accuracy of 64%. Logistic regression performed slightly poorer at 62%. Negative recall was the most difficult type of sentiment to predict across the board. Positive recall was the most succesfull across the board. Pruned random forest model to reduce overfitting using: 
+
+> 1. Max Depth: Maximum depth of tree
+> 2. Minimum Sample Leaf: Minimum number of samples to to split an internal node
 
 
 **FUTURE WORK**
@@ -50,3 +63,4 @@ https://textblob.readthedocs.io/en/dev/advanced_usage.html#sentiment-analyzers
 2. Live stream news articles (would need to get around API request limits or use different API)
 3. Extract opinions from social media sitess like Reddit, Twitter, & Facebook
 4. Create API to add sentiment as an overlay for technical analysis for quantitative traders
+5. Reduce overfit on Random Forest models

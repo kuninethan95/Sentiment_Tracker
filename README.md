@@ -57,6 +57,11 @@ Tested Random Forest and Logistic Regression to classify sentiment as positive, 
 > 1. Max Depth: Maximum depth of tree
 > 2. Minimum Sample Leaf: Minimum number of samples to to split an internal node
 
+------
+# Dashboard
+
+
+
 
 **FUTURE WORK**
 1. Topic modeling using Latent Dirichlet Allocation to improve insights

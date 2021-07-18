@@ -151,7 +151,7 @@ def sent_vol_fig(df_, company):
         fig.update_xaxes(rangebreaks=[dict(bounds=[16, 9], pattern="hour")])
     
     fig.update_xaxes(rangeslider_visible=True)
-    fig.update_layout(width=1100,height=400)
+    fig.update_layout(width=1000,height=400)
     return fig
 
 plotly_fig = sent_vol_fig(df_resamp, company)

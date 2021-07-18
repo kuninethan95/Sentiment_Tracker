@@ -4,16 +4,16 @@
 
 Sentiment analysis is critical for understanding how customers, investors, and the general public feel about a companies brand. Companies are operating in an environment where anything less than a pristine image is detrimental. I have built a dashboard that shows companies how their public sentiment is changing on an hourly basis. They can use this data to make informed decisions on how to alter their public persona. 
 
-**ROADMAP**
-
-The goal of this project is to track the sentiment of major technology companies based on global news articles. I used the newsapi (link) to source articles from around the world and filtered out those that did not provide meaningful content. Next, I used a Kaggle financial news headlines (link) dataset to determine the best combination of unsupervised sentiment analysis models and landed on a combination of VADER and TextBlob. Then, I used this rules based model to approach to extract sentiment from the news headlines that I sourced and confidentially assigned each article a positive, neutral, or negative score. Finally, I used a Random Forest model to determine which specific words were most impactful in driving sentiment by extracting feature importance. Last, I built a dashboard on streamlit to display my findings. 
-
 **GOALS**
 
 1. Import news articles with proper queries and filtering
 2. Implement various unsupervised sentiment analysis models (VADER, TextBlob, FLAIR)
 3. Utilize classification models like Random Forests to create inferences
 4. Deploy to a webapp using streamlit
+
+**ROADMAP**
+
+The goal of this project is to track the sentiment of major technology companies based on global news articles. I used the newsapi (link) to source articles from around the world and filtered out those that did not provide meaningful content. Next, I used a Kaggle financial news headlines (link) dataset to determine the best combination of unsupervised sentiment analysis models and landed on a combination of VADER and TextBlob. Then, I used this rules based model to approach to extract sentiment from the news headlines that I sourced and confidentially assigned each article a positive, neutral, or negative score. Finally, I used a Random Forest model to determine which specific words were most impactful in driving sentiment by extracting feature importance. Last, I built a dashboard on streamlit to display my findings. 
 
 ---------
 # Extract, Transform, Load

@@ -328,4 +328,4 @@ zipp                      3.3.0                      py_0    conda-forge
 zlib                      1.2.11            h7795811_1010    conda-forge
 zope.interface            5.3.0            py38h96a0964_0    conda-forge
 zstd                      1.4.5                h289c70a_2    conda-forge
-bash-3.2$
+

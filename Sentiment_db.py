@@ -8,8 +8,17 @@ from plotly.subplots import make_subplots
 import datetime
 import SessionState
 import joblib
+import nltk
+from nltk.corpus import stopwords
+import string
+from nltk import RegexpTokenizer
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
+
+nltk.download('stopwords')
 
 st.set_page_config(layout="wide")
+
 
 
 # Set title
@@ -147,90 +156,134 @@ plotly_fig = sent_vol_fig(df_resamp, company)
 
 st.plotly_chart(plotly_fig)
 
-def find_file(company):
+col1, col2 = st.beta_columns([1,1])
 
-    if company == "Apple":
-        if week == "June 14th - June 19th":
-            file = joblib.load('grid_estimator_models/apple1_bp.pkl')
-    if week == "June 21st - June 25th":
-            file = joblib.load('grid_estimator_models/apple2_bp.pkl')
+with col1:
 
-    if company == "Amazon":
-        if week == "June 14th - June 19th":
-            file = joblib.load('grid_estimator_models/am1_bp.pkl')
+    def find_file(company):
+
+        if company == "Apple":
+            if week == "June 14th - June 19th":
+                file = joblib.load('grid_estimator_models/apple1_bp.pkl')
         if week == "June 21st - June 25th":
-            file = joblib.load('grid_estimator_models/am2_bp.pkl')
+                file = joblib.load('grid_estimator_models/apple2_bp.pkl')
 
-    if company == "Microsoft":
-        if week == "June 14th - June 19th":
-            file = joblib.load('grid_estimator_models/ms1_bp.pkl')
-        if week == "June 21st - June 25th":
-            file = joblib.load('grid_estimator_models/ms2_bp.pkl')
+        if company == "Amazon":
+            if week == "June 14th - June 19th":
+                file = joblib.load('grid_estimator_models/am1_bp.pkl')
+            if week == "June 21st - June 25th":
+                file = joblib.load('grid_estimator_models/am2_bp.pkl')
 
-    if company == "Netflix":
-        if week == "June 14th - June 19th":
-            file = joblib.load('grid_estimator_models/nf1_bp.pkl')
-        if week == "June 21st - June 25th":
-            file = joblib.load('grid_estimator_models/nf2_bp.pkl')
-    
-    if company == "Facebook":
-        if week == "June 14th - June 19th":
-            file = joblib.load('grid_estimator_models/fb1_bp.pkl')
-        if week == "June 21st - June 25th":
-            file = joblib.load('grid_estimator_models/fb2_bp.pkl')
+        if company == "Microsoft":
+            if week == "June 14th - June 19th":
+                file = joblib.load('grid_estimator_models/ms1_bp.pkl')
+            if week == "June 21st - June 25th":
+                file = joblib.load('grid_estimator_models/ms2_bp.pkl')
 
-    if company == "Google":
-        if week == "June 14th - June 19th":
-            file = joblib.load('grid_estimator_models/goog1_bp.pkl')
-        if week == "June 21st - June 25th":
-            file = joblib.load('grid_estimator_models/goog2_bp.pkl')
+        if company == "Netflix":
+            if week == "June 14th - June 19th":
+                file = joblib.load('grid_estimator_models/nf1_bp.pkl')
+            if week == "June 21st - June 25th":
+                file = joblib.load('grid_estimator_models/nf2_bp.pkl')
+        
+        if company == "Facebook":
+            if week == "June 14th - June 19th":
+                file = joblib.load('grid_estimator_models/fb1_bp.pkl')
+            if week == "June 21st - June 25th":
+                file = joblib.load('grid_estimator_models/fb2_bp.pkl')
 
-    return file
+        if company == "Google":
+            if week == "June 14th - June 19th":
+                file = joblib.load('grid_estimator_models/goog1_bp.pkl')
+            if week == "June 21st - June 25th":
+                file = joblib.load('grid_estimator_models/goog2_bp.pkl')
 
-pkl_file = find_file(company)
+        return file
 
-def feat_imp_fig(pkl_file, company, week):
-    
+    pkl_file = find_file(company)
 
-    # Load in pickle file
-    comp_be = pkl_file
+    def feat_imp_fig(pkl_file, company, week):
+        
 
-    # Create vector + clf
-    vect = comp_be.named_steps['text_pipe']
-    clf = comp_be.named_steps['clf']
+        # Load in pickle file
+        comp_be = pkl_file
 
-    # Feature Importance Series
-    importance = pd.Series(clf.feature_importances_,
-                          index=vect.get_feature_names())
+        # Create vector + clf
+        vect = comp_be.named_steps['text_pipe']
+        clf = comp_be.named_steps['clf']
 
-    importance=importance.sort_values(ascending=False).to_frame()
-    importance = importance.nlargest(30, columns=0)
-    importance=importance.sort_values(by=0, ascending=True)
+        # Feature Importance Series
+        importance = pd.Series(clf.feature_importances_,
+                            index=vect.get_feature_names())
 
-    # Remove company name
-    importance.drop(company, inplace=True)
+        importance=importance.sort_values(ascending=False).to_frame()
+        importance = importance.nlargest(30, columns=0)
+        importance=importance.sort_values(by=0, ascending=True)
 
-    # Rename column
-    importance.rename(columns={0:'Sentiment Importance'}, inplace=True)
+        # Remove company name
+        importance.drop(company, inplace=True)
 
-    # Create Plotly fig
-    fig = px.bar(importance, y=importance.index, x='Sentiment Importance', orientation='h')
-    layout1 = go.Layout(
-    title={
-        'text': f"Week of {week}: Most Impactful Words for Driving Sentiment for {company.capitalize()}",
-        'y':0.95,
-        'x':0.5,
-        'xanchor': 'center',
-        },
-    yaxis=dict(
-               tickvals=importance.index,
-        title='Commmon Words',
-        ))
-    fig.update_layout(layout1)
-    return fig
+        # Rename column
+        importance.rename(columns={0:'Sentiment Importance'}, inplace=True)
 
-fig = feat_imp_fig(pkl_file, company.lower(), week)
-st.plotly_chart(fig)
+        # Create Plotly fig
+        fig = px.bar(importance, y=importance.index, x='Sentiment Importance', orientation='h')
+        layout1 = go.Layout(
+        title={
+            'text': f"Week of {week}: Most Impactful Words for Driving Sentiment for {company.capitalize()}",
+            'y':0.95,
+            'x':0.5,
+            'xanchor': 'center',
+            },
+        yaxis=dict(
+                tickvals=importance.index,
+            title='Commmon Words',
+            ))
+        fig.update_layout(layout1)
+        return fig
+
+    fig = feat_imp_fig(pkl_file, company.lower(), week)
+    st.plotly_chart(fig)
+
+# Add wordcloud
+with col2:
+# Set up stopwords list
+    stopwords_list = stopwords.words('english')
+
+    # Add punctuation and companies
+    stopwords_list.extend(string.punctuation)
+    stopwords_list.append('’')
+    stopwords_list.append('‘')
+    stopwords_list.append('Apple')
+    stopwords_list.append('Facebook')
+    stopwords_list.append('Microsoft')
+    stopwords_list.append('Google')
+    stopwords_list.append('Netflix')
+    stopwords_list.append('Amazon') 
+
+    # Text preprocess
+    def preprocess_text(sentence):
+        pattern = "([a-zA-Z]+(?:'[a-z]+)?)"
+        tokenizer = RegexpTokenizer(pattern)
+        tokens = tokenizer.tokenize(sentence)
+        stopped_tokens= [w.lower() for w in tokens  if w.lower() not in stopwords_list]
+        return stopped_tokens
+
+    def create_wordcloud(df, sent, stop):
+
+        wordcloud = WordCloud(collocations=True, stopwords=stop)
+        df['tokens'] = df['cont_joined'].map(lambda x: preprocess_text(x))
+
+        corpus = df[df['Sentiment']==sent]['cont_joined'].to_list()
+        corpus = ",".join(corpus)
+        wordcloud.generate(corpus)
+        plt.figure(figsize = (12, 12), facecolor = None) 
+        plt.imshow(wordcloud) 
+        plt.axis('off')
+
+    st.pyplot(create_wordcloud(df, 1, stopwords_list))
+
+
 
 st.write('Please choose a weekday to further inspect')
 
@@ -390,4 +443,10 @@ df_prepped = df_prep.style.apply(highlight_1, axis=1)
 with col2:
     st.header(f"Here were the most polarizing {company} articles from {date:%B %d, %Y}")
     st.dataframe(df_prepped)
+
+
+
+
+
+
     

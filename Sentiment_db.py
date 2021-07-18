@@ -1,4 +1,4 @@
-# from pandas.io.parsers import read_csv
+
 import streamlit as st
 import pandas as pd
 
@@ -10,7 +10,7 @@ import SessionState
 import joblib
 import nltk
 from nltk.corpus import stopwords
-import string
+# import string
 from nltk import RegexpTokenizer
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
@@ -19,9 +19,6 @@ nltk.download('stopwords')
 
 st.set_page_config(layout="wide")
 st.set_option('deprecation.showPyplotGlobalUse', False)
-
-
-
 
 # Set title
 st.title("Sentiment Tracker")
@@ -271,7 +268,7 @@ with col2:
     stopwords_list = stopwords.words('english')
 
     # Add punctuation and companies
-    stopwords_list.extend(string.punctuation)
+    # stopwords_list.extend(string.punctuation)
     stopwords_list.append('’')
     stopwords_list.append('‘')
     stopwords_list.append('Apple')

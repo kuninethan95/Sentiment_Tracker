@@ -10,7 +10,7 @@ import SessionState
 import joblib
 import nltk
 from nltk.corpus import stopwords
-# import string
+import string
 from nltk import RegexpTokenizer
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
@@ -268,7 +268,7 @@ with col2:
     stopwords_list = stopwords.words('english')
 
     # Add punctuation and companies
-    # stopwords_list.extend(string.punctuation)
+    stopwords_list.extend(string.punctuation)
     stopwords_list.append('’')
     stopwords_list.append('‘')
     stopwords_list.append('Apple')

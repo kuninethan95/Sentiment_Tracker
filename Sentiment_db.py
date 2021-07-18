@@ -18,6 +18,8 @@ from wordcloud import WordCloud
 nltk.download('stopwords')
 
 st.set_page_config(layout="wide")
+st.set_option('deprecation.showPyplotGlobalUse', False)
+
 
 
 
@@ -36,43 +38,43 @@ company = st.sidebar.selectbox(
     ('Apple', 'Facebook',  'Amazon', 'Microsoft', 'Google', 'Netflix'))
 
 # Choose a week to get data from 
-week = st.sidebar.selectbox('Select Week', ('June 14th - June 19th', 'June 21st - June 25th'))
+week = st.sidebar.selectbox('Select Week', ('June 14th - June 18th', 'June 21st - June 25th'))
 
 # Get dataset for corresponding company and week
 def get_dataset(company, week):
     
     if company == "Apple":
-        if week == "June 14th - June 19th":
+        if week == "June 14th - June 18th":
             df = pd.read_csv('data/etl_df/df_etl_apple1.csv')
         if week == "June 21st - June 25th":
             df = pd.read_csv('data/etl_df/df_etl_apple2.csv')
     
     if company == "Amazon":
-        if week == "June 14th - June 19th":
+        if week == "June 14th - June 18th":
             df = pd.read_csv('data/etl_df/df_etl_am1.csv')
         if week == "June 21st - June 25th":
             df = pd.read_csv('data/etl_df/df_etl_am2.csv')
     
     if company == "Microsoft":
-        if week == "June 14th - June 19th":
+        if week == "June 14th - June 18th":
             df = pd.read_csv('data/etl_df/df_etl_msft1.csv')
         if week == "June 21st - June 25th":
             df = pd.read_csv('data/etl_df/df_etl_msft2.csv')
     
     if company == "Netflix":
-        if week == "June 14th - June 19th":
+        if week == "June 14th - June 18th":
             df = pd.read_csv('data/etl_df/df_etl_nflx1.csv')
         if week == "June 21st - June 25th":
             df = pd.read_csv('data/etl_df/df_etl_nflx2.csv')
 
     if company == "Facebook":
-        if week == "June 14th - June 19th":
+        if week == "June 14th - June 18th":
             df = pd.read_csv('data/etl_df/df_etl_fb1.csv')
         if week == "June 21st - June 25th":
             df = pd.read_csv('data/etl_df/df_etl_fb2.csv')
 
     if company == "Google":
-        if week == "June 14th - June 19th":
+        if week == "June 14th - June 18th":
             df = pd.read_csv('data/etl_df/df_etl_goog1.csv')
         if week == "June 21st - June 25th":
             df = pd.read_csv('data/etl_df/df_etl_goog2.csv')
@@ -163,37 +165,37 @@ with col1:
     def find_file(company):
 
         if company == "Apple":
-            if week == "June 14th - June 19th":
+            if week == "June 14th - June 18th":
                 file = joblib.load('grid_estimator_models/apple1_bp.pkl')
         if week == "June 21st - June 25th":
                 file = joblib.load('grid_estimator_models/apple2_bp.pkl')
 
         if company == "Amazon":
-            if week == "June 14th - June 19th":
+            if week == "June 14th - June 18th":
                 file = joblib.load('grid_estimator_models/am1_bp.pkl')
             if week == "June 21st - June 25th":
                 file = joblib.load('grid_estimator_models/am2_bp.pkl')
 
         if company == "Microsoft":
-            if week == "June 14th - June 19th":
+            if week == "June 14th - June 18th":
                 file = joblib.load('grid_estimator_models/ms1_bp.pkl')
             if week == "June 21st - June 25th":
                 file = joblib.load('grid_estimator_models/ms2_bp.pkl')
 
         if company == "Netflix":
-            if week == "June 14th - June 19th":
+            if week == "June 14th - June 18th":
                 file = joblib.load('grid_estimator_models/nf1_bp.pkl')
             if week == "June 21st - June 25th":
                 file = joblib.load('grid_estimator_models/nf2_bp.pkl')
         
         if company == "Facebook":
-            if week == "June 14th - June 19th":
+            if week == "June 14th - June 18th":
                 file = joblib.load('grid_estimator_models/fb1_bp.pkl')
             if week == "June 21st - June 25th":
                 file = joblib.load('grid_estimator_models/fb2_bp.pkl')
 
         if company == "Google":
-            if week == "June 14th - June 19th":
+            if week == "June 14th - June 18th":
                 file = joblib.load('grid_estimator_models/goog1_bp.pkl')
             if week == "June 21st - June 25th":
                 file = joblib.load('grid_estimator_models/goog2_bp.pkl')
@@ -230,16 +232,19 @@ with col1:
         fig = px.bar(importance, y=importance.index, x='Sentiment Importance', orientation='h')
         layout1 = go.Layout(
         title={
-            'text': f"Week of {week}: Most Impactful Words for Driving Sentiment for {company.capitalize()}",
+            'text': f"{week}: Most Impactful Words for {company.capitalize()}",
             'y':0.95,
             'x':0.5,
             'xanchor': 'center',
+            'font':dict(
+            
+            size=12)
             },
         yaxis=dict(
                 tickvals=importance.index,
             title='Commmon Words',
             ))
-        fig.update_layout(layout1)
+        fig.update_layout(layout1, width=400)
         return fig
 
     fig = feat_imp_fig(pkl_file, company.lower(), week)
@@ -248,6 +253,21 @@ with col1:
 # Add wordcloud
 with col2:
 # Set up stopwords list
+    
+    sent_ = st.selectbox(
+    'Select a Sentiment',
+    ('Positive', 'Neutral',  'Negative'))
+
+    def sent_to_num(sent_str):
+        if sent_str == 'Positive':
+            return 1
+        elif sent_str == 'Neutral':
+            return 0
+        else:
+            return -1
+
+    sentiment = sent_to_num(sent_)
+
     stopwords_list = stopwords.words('english')
 
     # Add punctuation and companies
@@ -269,25 +289,26 @@ with col2:
         stopped_tokens= [w.lower() for w in tokens  if w.lower() not in stopwords_list]
         return stopped_tokens
 
-    def create_wordcloud(df, sent, stop):
+    def create_wordcloud(df, sentiment, stop):
 
         wordcloud = WordCloud(collocations=True, stopwords=stop)
         df['tokens'] = df['cont_joined'].map(lambda x: preprocess_text(x))
 
-        corpus = df[df['Sentiment']==sent]['cont_joined'].to_list()
+        corpus = df[df['Sentiment']==sentiment]['cont_joined'].to_list()
         corpus = ",".join(corpus)
         wordcloud.generate(corpus)
         plt.figure(figsize = (12, 12), facecolor = None) 
         plt.imshow(wordcloud) 
         plt.axis('off')
 
-    st.pyplot(create_wordcloud(df, 1, stopwords_list))
+    st.pyplot(create_wordcloud(df, sentiment, stopwords_list))
+
 
 
 
 st.write('Please choose a weekday to further inspect')
 
-if week == 'June 14th - June 19th':
+if week == 'June 14th - June 18th':
     date = st.date_input('Date input', value=datetime.datetime(2021, 6,14), max_value=datetime.datetime(2021, 6, 18), min_value=datetime.datetime(2021, 6, 14))
 elif week == 'June 21st - June 25th':
     date = st.date_input('Date input', value=datetime.datetime(2021, 6,21), max_value=datetime.datetime(2021, 6, 25), min_value=datetime.datetime(2021, 6, 21))
@@ -297,7 +318,7 @@ date_str = str(date)
 
 # Make acceptable and unacceptable dates
 def aceptable_date(date_str):
-    if date_str == '2021-06-19':
+    if date_str == '2021-06-18':
         return ('Please choose weekday')
     else:
         return ''
@@ -372,7 +393,7 @@ def paginated_df(data):
     end_idx = (1 + session_state.page_number) * N
 
     # Index into the sub dataframe
-    sub_df = data.iloc[start_idx:end_idx, [0,4,-1]]
+    sub_df = data.iloc[start_idx:end_idx, [0,4,-2]]
     return sub_df
 #st.write(sub_df)
 

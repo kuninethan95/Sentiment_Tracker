@@ -1,5 +1,4 @@
-
-from pandas.io.parsers import read_csv
+# from pandas.io.parsers import read_csv
 import streamlit as st
 import pandas as pd
 

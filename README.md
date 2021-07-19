@@ -1,5 +1,6 @@
 # Sentiment Tracker
 
+
 **BUSINESS CASE**
 
 Sentiment analysis is critical for understanding how customers, investors, and the general public feel about a companies brand. Companies are operating in an environment where anything less than a pristine image is detrimental. I have built a dashboard that shows companies how their public sentiment is changing on an hourly basis. They can use this data to make informed decisions on how to alter their public persona. 
@@ -11,9 +12,11 @@ Sentiment analysis is critical for understanding how customers, investors, and t
 3. Utilize classification models like Random Forests to create inferences
 4. Deploy to a webapp using streamlit
 
+<img src="images/stock.png">
+
 **ROADMAP**
 
-The goal of this project is to track the sentiment of major technology companies based on global news articles. I used the newsapi (link) to source articles from around the world and filtered out those that did not provide meaningful content. Next, I used a Kaggle financial news headlines (link) dataset to determine the best combination of unsupervised sentiment analysis models and landed on a combination of VADER and TextBlob. Then, I used this rules based model to approach to extract sentiment from the news headlines that I sourced and confidentially assigned each article a positive, neutral, or negative score. Finally, I used a Random Forest model to determine which specific words were most impactful in driving sentiment by extracting feature importance. Last, I built a dashboard on streamlit to display my findings. 
+The goal of this project is to track the sentiment of major technology companies based on global news articles. I used the [newsapi](https://newsapi.org/) to source articles from around the world and filtered out those that did not provide meaningful content. Next, I used a [Kaggle financial](https://www.kaggle.com/ankurzing/sentiment-analysis-for-financial-news) news headlines  dataset to determine the best combination of unsupervised sentiment analysis models and landed on a combination of VADER and TextBlob. Then, I used this rules based model to approach to extract sentiment from the news headlines that I sourced and confidentially assigned each article a positive, neutral, or negative score. Finally, I used a Random Forest model to determine which specific words were most impactful in driving sentiment by extracting feature importance. Last, I built a dashboard on streamlit to display my findings. 
 
 ---------
 # Extract, Transform, Load
@@ -59,18 +62,13 @@ Querried results by relevancy and manually sorted out 'bad sources.' Removed dup
 
 Used VADER and TextBlob to extract sentiment:
 
-> VADER: Lexicon and rule based model for sentiment analysis typically used to extract social media sentiment. Trained on social media content and retuns a score between -1 and 1 based on positivity vs. negativity
+> [VADER](https://www.researchgate.net/publication/275828927_VADER_A_Parsimonious_Rule-based_Model_for_Sentiment_Analysis_of_Social_Media_Text): Lexicon and rule based model for sentiment analysis typically used to extract social media sentiment. Trained on social media content and retuns a score between -1 and 1 based on positivity vs. negativity
 
-> TextBlob: Rules based sentiment analysis model which uses NaiveBayesAnalyzer and is trained on a movie reviews corpus
+> [TextBlob](https://textblob.readthedocs.io/en/dev/advanced_usage.html#sentiment-analyzers): Rules based sentiment analysis model which uses NaiveBayesAnalyzer and is trained on a movie reviews corpus
 
 Performed sentiment analysis on news articles using VADER and TextBlob. When both models had the same prediction, they were 67% accurate (predicting positive, negative, neutral sentiment) and 42% accurate (TextBlob) and 47% (VADER) accurate when they differed.
 
 When VADER & TextBlob had the same result, I agreed with consensus and took the conclusion as accurate. When they differed, I created a rules based approach to reconcile. When their results differed, I looked at how much they differed by (0,2) and chose the VADER or TextBlob result based on how far off from each other they were. When they were very different, I opted for VADER. This improved accuracy from 56% to 60%.
-
-
-https://www.researchgate.net/publication/275828927_VADER_A_Parsimonious_Rule-based_Model_for_Sentiment_Analysis_of_Social_Media_Text
-
-https://textblob.readthedocs.io/en/dev/advanced_usage.html#sentiment-analyzers
 
 ------
 # NLP Using TF-IDF and Random Forest
@@ -89,11 +87,26 @@ Tested Random Forest and Logistic Regression to classify sentiment as positive, 
 > 1. Max Depth: Maximum depth of tree
 > 2. Minimum Sample Leaf: Minimum number of samples to to split an internal node
 
+<img src="images/example_model.png">
+
 ------
 # Dashboard
 
+Allows user to choose to analyze the sentiment based off of news articles of either Apple, Facebook, Google, Microsoft, Netflix, or Amazon. They can look at the weeks of June 14th-18th or June 21st-25th (due to API limitations)
 
+<img src="images/sent_graph.png">
 
+> Shows the average hourly sentiment, volume of news article, and a rolling average to reduce noise
+
+Users can analyze which words are driving sentiment
+<img src="images/cloud.png">
+> Can hone in on a positive, neutral, or negative sentiment to explore how news articles are impacting perception
+
+Users can observe the most polarizing news headlines from the day
+<img src="images/polarizing.png">
+> These articles are either in top 90% quantile of most positive or bottom 10% quantile of most negative based on the unsupervised learning model
+
+The purpose of the dashboard is to assist companies in understanding why users feel certain emotions toward their company or brand. Brands can observe what words are driving sentiment and if events are generating excess media attention. 
 
 **FUTURE WORK**
 1. Topic modeling using Latent Dirichlet Allocation to improve insights

@@ -100,7 +100,7 @@ Keras-Preprocessing==1.1.2
 kiwisolver @ file:///Users/runner/miniforge3/conda-bld/kiwisolver_1602517227315/work
 korean-lunar-calendar @ file:///home/conda/feedstock_root/build_artifacts/korean_lunar_calendar_1589354365811/work
 lime==0.2.0.1
-llvmlite==0.36.0
+
 locket==0.2.0
 LunarCalendar==0.0.9
 lxml @ file:///Users/runner/miniforge3/conda-bld/lxml_1602413166391/work

@@ -7,7 +7,7 @@ Sentiment analysis is critical for understanding how customers, investors, and t
 **GOALS**
 
 1. Import news articles with proper queries and filtering
-2. Implement various unsupervised sentiment analysis models (VADER, TextBlob, FLAIR)
+2. Implement various unsupervised sentiment analysis models (VADER, TextBlob, FLAIR) to determine sentiment
 3. Utilize classification models like Random Forests to create inferences
 4. Deploy to a webapp using streamlit
 
@@ -23,6 +23,38 @@ ETL was performed using Python Requests package and the newsapi Python client. I
 Querried results by relevancy and manually sorted out 'bad sources.' Removed duplicates based on content and source and dropped null values. 'Content' of the article is limited to 200 characters so concatenated 'title', 'description' (summary of article) and 'content' so that unsupervised models would have more data to extract sentiment. 
 
 -------
+# Exploratory Data Analysis
+
+*Analyzed the most common sources by company.*
+
+<img src="images/top_sources.png">
+
+- Netflix is mainly comprised of entertainment reporting (Deadline/Variety)
+- Amazon/Google are mainly comprised of tech reporting
+- Apple has a lot of Apple specific media outlets
+- Microsoft is a combination of general tech and Microsoft specific
+- Facebook is mainly political reports
+
+*Tracked the number of mentions per hour*
+
+<img src="images/14_18_hrly.png">
+
+<img src="images/21_25_hrly.png">
+
+- The mornings have the highest volume of news coverage and it slowly decreases as the day progresses
+- In the first week, Netflix and Microsoft are on the lower range and the remaining companies are greater in volume by a magnitude of 2/2
+- In the second week, Amazon begins very strong because of Amazon Prime Day and then falls into a more predictable pattern
+
+*Analyzed Overall Sentiment Per Company*
+
+<img src="images/overall_sentiment.png">
+
+- The plurality of all companies is positive sentiment, followed by neutral sentiment, followed by negative sentiment
+- Amazon has the highest ratio of positive to negative sentiment
+- Facebook has hte lowest positive sentiment and highest negative sentiment
+- Microsoft has the greatest neutral sentiment
+- The unsupervised learning model had challenges identifying neutral values and misinterpeted them as positive which may confound the results slighltly
+
 # Opinion Mining
 
 Used VADER and TextBlob to extract sentiment:

@@ -1,6 +1,6 @@
 # Sentiment Tracker
 
-Dashboard can be found [here](www.google.com)
+Dashboard can be found [here](https://share.streamlit.io/kuninethan95/Sentiment_Tracker/main/Sentiment_db.py)
 
 ----
 **BUSINESS CASE**

@@ -7,7 +7,7 @@ dependencies:
   - _py-xgboost-mutex=2.0
   - abseil-cpp=20200225.2
   - aiohttp=3.6.2
-  - appnope=0.1.0
+#   - appnope=0.1.0
   - argon2-cffi=20.1.0
   - arrow-cpp=1.0.1
   - arviz=0.10.0
@@ -133,7 +133,7 @@ dependencies:
   - libev=4.33
   - libevent=2.1.10
   - libffi=3.3
-  - libgfortran=4.0.0
+#   - libgfortran=4.0.0
   - libgfortran4=7.5.0
   - libiconv=1.16
   - liblapack=3.8.0

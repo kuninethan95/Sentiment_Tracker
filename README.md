@@ -128,4 +128,4 @@ The purpose of the dashboard is to assist companies in understanding why users f
 4. Create API to add sentiment as an overlay for technical analysis for quantitative traders
 5. Reduce overfit on Random Forest models
 ----
-For additional information please feel free to conact me via [email](kunin.ethan95@gmail.com) or connect with me on [LinkedIn](https://www.linkedin.com/in/ethan-kunin-931a3bba/)
+For additional information please feel free to conact me via email: kunin.ethan95@gmail.com or connect with me on [LinkedIn](https://www.linkedin.com/in/ethan-kunin-931a3bba/)

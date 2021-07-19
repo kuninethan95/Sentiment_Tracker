@@ -251,7 +251,7 @@ python-dateutil           2.8.1                      py_0    conda-forge
 python_abi                3.8                      1_cp38    conda-forge
 pytz                      2020.1             pyh9f0ad1d_0    conda-forge
 pywavelets                1.1.1            py38hc7193ba_3    conda-forge
-pyyaml                    5.3.1            py38h5406a74_2    conda-forge
+
 pyzmq                     19.0.2           py38h2c785a9_2    conda-forge
 queuelib                  1.5.0              pyh9f0ad1d_0    conda-forge
 re2                       2020.10.01           hb1e8313_0    conda-forge

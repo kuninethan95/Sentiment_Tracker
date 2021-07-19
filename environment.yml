@@ -335,3 +335,4 @@ dependencies:
     - wrapt==1.12.1
     - yfinance==0.1.59
 prefix: /Users/ethankunin/opt/anaconda3/envs/learn-env
+test

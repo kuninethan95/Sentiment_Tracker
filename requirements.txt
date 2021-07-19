@@ -4,7 +4,7 @@ abseil-cpp                20200225.2           hb1e8313_2    conda-forge
 absl-py                   0.10.0                   pypi_0    pypi
 aiohttp                   3.6.2            py38h4d0b108_1    conda-forge
 altair                    4.1.0                    pypi_0    pypi
-appnope                   0.1.0           py38h50d1736_1003    conda-forge
+
 argon2-cffi               20.1.0           py38h5406a74_2    conda-forge
 arrow-cpp                 1.0.1           py38h80f48fe_13_cpu    conda-forge
 arviz                     0.10.0                     py_0    conda-forge
@@ -146,7 +146,7 @@ libedit                   3.1.20191231         h0678c8f_2    conda-forge
 libev                     4.33                 haf1e3a3_1    conda-forge
 libevent                  2.1.10               hddc9c9b_3    conda-forge
 libffi                    3.3                  hb1e8313_2
-libgfortran               4.0.0           7_5_0_h1a10cd1_18    conda-forge
+
 libgfortran4              7.5.0               h1a10cd1_18    conda-forge
 libiconv                  1.16                 haf1e3a3_0    conda-forge
 liblapack                 3.8.0               17_openblas    conda-forge

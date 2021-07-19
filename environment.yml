@@ -304,7 +304,7 @@ dependencies:
     - keras==2.4.3
     - keras-preprocessing==1.1.2
     - lime==0.2.0.1
-    - llvmlite==0.36.0
+#     - llvmlite==0.36.0
     - markdown==3.3.1
     - missingno==0.4.2
     - multitasking==0.0.9

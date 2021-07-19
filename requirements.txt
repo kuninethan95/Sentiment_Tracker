@@ -1,5 +1,5 @@
 # Name                    Version                   Build  Channel
-_py-xgboost-mutex         2.0                       cpu_0    conda-forge
+
 abseil-cpp                20200225.2           hb1e8313_2    conda-forge
 absl-py                   0.10.0                   pypi_0    pypi
 aiohttp                   3.6.2            py38h4d0b108_1    conda-forge

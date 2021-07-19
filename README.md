@@ -1,6 +1,8 @@
 # Sentiment Tracker
 
+Dashboard can be found [here](www.google.com)
 
+----
 **BUSINESS CASE**
 
 Sentiment analysis is critical for understanding how customers, investors, and the general public feel about a companies brand. Companies are operating in an environment where anything less than a pristine image is detrimental. I have built a dashboard that shows companies how their public sentiment is changing on an hourly basis. They can use this data to make informed decisions on how to alter their public persona. 
@@ -24,6 +26,8 @@ The goal of this project is to track the sentiment of major technology companies
 ETL was performed using Python Requests package and the newsapi Python client. I decided to focus on FAANG companies + Microsoft. Newsapi has strict throttling limits and only allowed for 100 requests over a 24 hour period which prevented me from being able to stream live data. Additionally, results only span one month so I decided to focus on 2 weeks of data for 6 companies. 
 
 Querried results by relevancy and manually sorted out 'bad sources.' Removed duplicates based on content and source and dropped null values. 'Content' of the article is limited to 200 characters so concatenated 'title', 'description' (summary of article) and 'content' so that unsupervised models would have more data to extract sentiment. 
+
+*For details, please see this [notebook](https://github.com/kuninethan95/Sentiment_Tracker/blob/main/NLP_Modeling.ipynb) and this [notebook](https://github.com/kuninethan95/Sentiment_Tracker/blob/main/Data%20Gathering%20-%20NewsAPI%20%2B%20YFinanace.ipynb)*
 
 -------
 # Exploratory Data Analysis
@@ -58,6 +62,8 @@ Querried results by relevancy and manually sorted out 'bad sources.' Removed dup
 - Microsoft has the greatest neutral sentiment
 - The unsupervised learning model had challenges identifying neutral values and misinterpeted them as positive which may confound the results slighltly
 
+*For details, please see this [notebook](https://github.com/kuninethan95/Sentiment_Tracker/blob/main/EDA.ipynb)*
+
 # Opinion Mining
 
 Used VADER and TextBlob to extract sentiment:
@@ -69,6 +75,8 @@ Used VADER and TextBlob to extract sentiment:
 Performed sentiment analysis on news articles using VADER and TextBlob. When both models had the same prediction, they were 67% accurate (predicting positive, negative, neutral sentiment) and 42% accurate (TextBlob) and 47% (VADER) accurate when they differed.
 
 When VADER & TextBlob had the same result, I agreed with consensus and took the conclusion as accurate. When they differed, I created a rules based approach to reconcile. When their results differed, I looked at how much they differed by (0,2) and chose the VADER or TextBlob result based on how far off from each other they were. When they were very different, I opted for VADER. This improved accuracy from 56% to 60%.
+
+*For details, please see this [notebook](https://github.com/kuninethan95/Sentiment_Tracker/blob/main/NLP_Modeling.ipynb)*
 
 ------
 # NLP Using TF-IDF and Random Forest
@@ -89,6 +97,8 @@ Tested Random Forest and Logistic Regression to classify sentiment as positive, 
 
 <img src="images/example_model.png">
 
+*For details, please see this [notebook](https://github.com/kuninethan95/Sentiment_Tracker/blob/main/NLP_Modeling.ipynb)*
+
 ------
 # Dashboard
 
@@ -107,6 +117,9 @@ Users can observe the most polarizing news headlines from the day
 > These articles are either in top 90% quantile of most positive or bottom 10% quantile of most negative based on the unsupervised learning model
 
 The purpose of the dashboard is to assist companies in understanding why users feel certain emotions toward their company or brand. Brands can observe what words are driving sentiment and if events are generating excess media attention. 
+
+*For details, please see this [notebook](https://github.com/kuninethan95/Sentiment_Tracker/blob/main/Dashboard%20Prototype.ipynb)*
+
 
 **FUTURE WORK**
 1. Topic modeling using Latent Dirichlet Allocation to improve insights

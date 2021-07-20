@@ -1,6 +1,6 @@
 # Sentiment Tracker
 
-Dashboard applicatino can be found [here](https://share.streamlit.io/kuninethan95/Sentiment_Tracker/main/Sentiment_db.py)
+Dashboard application can be found [here](https://share.streamlit.io/kuninethan95/Sentiment_Tracker/main/Sentiment_db.py)
 
 ----
 **BUSINESS CASE**

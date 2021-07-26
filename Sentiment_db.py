@@ -467,6 +467,6 @@ with col2:
 
 
 
-
+st.write("Created by Ethan Kunin for more information please see [GitHub Repository](https://github.com/kuninethan95/Sentiment_Tracker)")
 
     

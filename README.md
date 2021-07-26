@@ -27,7 +27,7 @@ ETL was performed using Python Requests package and the newsapi Python client. I
 
 Querried results by relevancy and manually sorted out 'bad sources.' Removed duplicates based on content and source and dropped null values. 'Content' of the article is limited to 200 characters so concatenated 'title', 'description' (summary of article) and 'content' so that unsupervised models would have more data to extract sentiment. 
 
-*For details, please see this [notebook](https://github.com/kuninethan95/Sentiment_Tracker/blob/main/NLP_Modeling.ipynb) and this [notebook](https://github.com/kuninethan95/Sentiment_Tracker/blob/main/Data%20Gathering%20-%20NewsAPI%20%2B%20YFinanace.ipynb)*
+*For details, please see this [notebook](https://github.com/kuninethan95/Sentiment_Tracker/blob/main/NLP_Modeling.ipynb) and this [notebook](https://github.com/kuninethan95/Sentiment_Tracker/blob/main/Data%20Gathering%20-%20NewsAPI.ipynb)*
 
 -------
 # Exploratory Data Analysis
